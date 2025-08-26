@@ -1,7 +1,7 @@
 // import * as Data from './api' ;
 const inputSearch = document.querySelector(".search-input")
 const searchBtn = document.querySelector('search-btn');
-const mealForm = document.querySelector('search-box');
+const mealForm = document.querySelector('.search-box');
 const filterMeal = document.querySelector('.filters');
 
 const mealGrid = document.getElementById('mealsGrid');
@@ -44,7 +44,7 @@ async function fetchDataSearch(item) {
          redirect: "follow",
       };
       const response = await fetch(
-         `ttps://www.themealdb.com/api/json/v1/1/search.php?f=${item}`,
+         `https://www.themealdb.com/api/json/v1/1/search.php?f=${item}`,
          requestOptions);
 
       if (!response.ok) {
@@ -52,8 +52,8 @@ async function fetchDataSearch(item) {
       }
 
       const json = await response.json();
-      console.log("dataSearch return --", json);
-      return json;
+      console.log("dataSearch return --", json.meals);
+      return json.meals;
    } catch (error) {
       throw new console.error("Error:", err.response?.data || err.message);
    }
@@ -84,10 +84,15 @@ function handleSearch(e) {
 }
 
 
-function runMeals(letter) {
+async function runMeals(letter) {
 
-   mealsData = await fetchDataSearch()
+   const mealsData = await fetchDataSearch(letter);
    mealGrid.innerHTML = '';
+
+   if (!mealsData) {
+      mealGrid.innerHTML = `<p>No meals found for "${letter}"</p>`;
+      return;
+   }
 
    mealsData.forEach(meal => {
       const mealCard = createCard(meal);
