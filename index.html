@@ -6,10 +6,12 @@
     <title>Document</title>
     <link rel="stylesheet" href="./style/styles.css" />
     <script src="./script/script.js" defer></script>
+    <script type="module" src="./script/api.js" defer></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
     ></script>
+    
   </head>
   <body class="bg-gray-100 text-center p-4">
     <section class="container mx-auto m-auto">
@@ -20,23 +22,25 @@
         </p>
       </header>
 
-      <div class="search-container flex justify-center mb-12">
-        <div class="search-box flex bg-white max-w-[500px]">
+      <div class="search-container flex justify-center">
+        <form class="search-box flex bg-white max-w-[500px]">
           <input
             type="text"
             class="search-input flex-1 border-none outline-none bg-transparent"
             placeholder="Search for meals..."
             required
           />
-          <button class="search-btn border-none text-white text-bold">
+          <button type="submit" class="search-btn border-none text-white text-bold">
             Search
           </button>
-        </div>
+        </form>
       </div>
 
-      <div class="filters"></div>
+      <div class="filters ">
+        <button class="filter-btn active" data-filter="all">All</button>
+      </div>
 
-      <div class="meals-grid id= mealsGrid"></div>
+      <div class="meals-grid" id= "mealsGrid"></div>
 
       
     </section>
