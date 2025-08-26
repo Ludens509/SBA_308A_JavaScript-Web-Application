@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style/styles.css" />
+    <script src="./script/script.js" defer></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
+    ></script>
+  </head>
+  <body class="bg-gray-100 text-center p-4">
+    <section class="container mx-auto m-auto">
+      <header class="text-center mb-8 text-white">
+        <h1 class="text-4xl">🍽️ FoodieHub</h1>
+        <p class="subtitle">
+          Discover delicious meals and their nutritional information
+        </p>
+      </header>
+
+      <div class="search-container flex justify-center mb-12">
+        <div class="search-box flex bg-white max-w-[500px]">
+          <input
+            type="text"
+            class="search-input flex-1 border-none outline-none bg-transparent"
+            placeholder="Search for meals..."
+            required
+          />
+          <button class="search-btn border-none text-white text-bold">
+            Search
+          </button>
+        </div>
+      </div>
+
+      <div class="filters"></div>
+
+      <div class="meals-grid id= mealsGrid"></div>
+
+      
+    </section>
+  </body>
+</html>
