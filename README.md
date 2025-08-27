@@ -6,7 +6,7 @@ JavaScript Web Application</h1>
 
 <div align="center">
   <h3>
-    <a href="https://inspiring-entremet-e98bdf.netlify.app">
+    <a href="https://sba-308-a-java-script-web-applicati.vercel.app/">
       Demo
     </a>
     <span> | </span>
