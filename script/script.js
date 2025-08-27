@@ -1,4 +1,4 @@
-import {fetchDataCategories,fetchDataSearch, fetchMealsByCategory} from './api.js' ;
+import { fetchDataCategories, fetchDataSearch, fetchMealsByCategory } from './api.js';
 const inputSearch = document.querySelector(".search-input")
 const searchBtn = document.querySelector('search-btn');
 const mealForm = document.querySelector('.search-box');
@@ -6,7 +6,6 @@ const filterMeal = document.querySelector('.filters');
 
 const mealGrid = document.getElementById('mealsGrid');
 
-let currentFilter = 'all';
 let currentSearchResults = [];
 
 function render() {
@@ -27,7 +26,7 @@ function addEvenListener() {
    // });
 }
 
-function handleSearch(e) {
+async function handleSearch(e) {
    e.preventDefault();
 
    const searchLetter = inputSearch.value;
@@ -36,23 +35,43 @@ function handleSearch(e) {
       throw ` please enter a Letter to search meal`;
       return;
    }
-   mealForm.reset();
-   runMeals(searchLetter.toLowerCase());
+   // mealForm.reset();
+   currentFilter = "all";
+   await runMeals(searchLetter.toLowerCase());
 
    inputSearch.focus();
 }
 
 
-async function runMeals(letter='a') {
+async function runMeals(letter = 'a') {
+   try {
+      const mealsData = await fetchDataSearch(letter);
+      currentSearchResults = mealsData || [];
 
-   const mealsData = await fetchDataSearch(letter) || [];
-   mealGrid.innerHTML = '';
+      mealGrid.innerHTML = '';
 
-   if (!mealsData) {
-      mealGrid.innerHTML = `<p>No meals found for "${letter}"</p>`;
-      return;
+      if (!mealsData || mealsData === 0) {
+         mealGrid.innerHTML = `<p>No meals found for "${letter}"</p>`;
+         return;
+      }
+
+      displayMeals(currentSearchResults);
+   } catch (error) {
+      console.error(`Error :`, error);
    }
 
+
+
+
+}
+//This function display the Meals by taking an arrays of Meals
+function displayMeals(mealsData) {
+
+   mealGrid.innerHTML = '';
+   if(!mealsData){
+      mealGrid.innerHTML = `<p>No meals found!</p>`;
+      return 
+   }
    mealsData.forEach(meal => {
       const mealCard = createCard(meal);
       mealGrid.appendChild(mealCard);
@@ -103,11 +122,11 @@ async function handleFilterChange(e) {
    // }
    // e.target.classList.add('active');
 
-   
+
    // // this variable store witch filter is currently active, with the  element dataset that give access to all the data attribute of an HTML element and filter correspond to data-filter attribute in the HTML.
    const filter = e.target.dataset.filter;
    currentFilter = filter;
-  
+
 
    // runMeals();
 
@@ -118,19 +137,19 @@ async function handleFilterChange(e) {
    currentFilter = e.target.dataset.filter;
 
    const filteredMeals = currentFilter === 'all'
-     
-         const dataC = await fetchDataCategories();
-         const searchLetter = inputSearch.value;
-         const dataSearch = await fetchDataSearch (searchLetter);
 
-         dataC.forEach((elementC) => {
-         dataSearch.forEach((elementS) => {
+   const dataC = await fetchDataCategories();
+   const searchLetter = inputSearch.value;
+   const dataSearch = await fetchDataSearch(searchLetter);
 
-         if(elementC.strCategory == elementS.strCategory){
-             filteredMeals = currentFilter ;
+   dataC.forEach((elementC) => {
+      dataSearch.forEach((elementS) => {
+
+         if (elementC.strCategory == elementS.strCategory) {
+            filteredMeals = currentFilter;
          }
-         });
-         });
+      });
+   });
    mealGrid.innerHTML = '';
    filteredMeals.forEach(meal => {
       const mealCard = createCard(meal);
