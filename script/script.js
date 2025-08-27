@@ -1,4 +1,4 @@
-// import * as Data from './api' ;
+import {fetchDataCategories,fetchDataSearch, fetchMealsByCategory} from './api.js' ;
 const inputSearch = document.querySelector(".search-input")
 const searchBtn = document.querySelector('search-btn');
 const mealForm = document.querySelector('.search-box');
@@ -7,72 +7,24 @@ const filterMeal = document.querySelector('.filters');
 const mealGrid = document.getElementById('mealsGrid');
 
 let currentFilter = 'all';
+let currentSearchResults = [];
 
 function render() {
-   runMeals();
+   runMeals("a"); //default number;
    addEvenListener();
 }
-
-async function fetchDataCategories() {
-   try {
-
-      var requestOptions = {
-         method: "GET",
-         redirect: "follow",
-      };
-      const response = await fetch(
-         "https://www.themealdb.com/api/json/v1/1/categories.php",
-         requestOptions);
-
-      if (!response.ok) {
-         throw new Error(`something went wrong ${response.status}`);
-      }
-
-      const json = await response.json();
-
-      console.log("data Categories return --", json.categories);
-      return json.categories;
-   } catch (error) {
-      throw new console.error("Error:", err.response?.data || err.message);
-   }
-
-}
-
-async function fetchDataSearch(item) {
-   try {
-      var requestOptions = {
-         method: "GET",
-         redirect: "follow",
-      };
-      const response = await fetch(
-         `https://www.themealdb.com/api/json/v1/1/search.php?f=${item}`,
-         requestOptions);
-
-      if (!response.ok) {
-         throw new Error(`something went wrong ${response.status}`);
-      }
-
-      const json = await response.json();
-      console.log("dataSearch return --", json.meals);
-      return json.meals;
-   } catch (error) {
-      throw new console.error("Error:", err.response?.data || err.message);
-   }
-
-}
-
-
-
 
 
 function addEvenListener() {
    mealForm.addEventListener('submit', handleSearch);
 
    // select all buttons inside .filters
-   const filterButtons = filterMeal.querySelectorAll('button');
-   filterButtons.forEach(btn => {
-      btn.addEventListener('click', handleFilterChange);
-   });
+   filterMeal.addEventListener('click', handleFilterChange);
+   // const filterButtons = filterMeal.querySelectorAll('button');
+
+   // filterButtons.forEach(btn => {
+   //    btn.addEventListener('click', handleFilterChange);
+   // });
 }
 
 function handleSearch(e) {
@@ -85,15 +37,15 @@ function handleSearch(e) {
       return;
    }
    mealForm.reset();
-   runMeals(searchLetter);
+   runMeals(searchLetter.toLowerCase());
 
    inputSearch.focus();
 }
 
 
-async function runMeals(letter) {
+async function runMeals(letter='a') {
 
-   const mealsData = await fetchDataSearch(letter);
+   const mealsData = await fetchDataSearch(letter) || [];
    mealGrid.innerHTML = '';
 
    if (!mealsData) {
@@ -142,23 +94,47 @@ function createCard(meal) {
    });
 })();
 
-function handleFilterChange(e) {
-   for (const btn of filterButtons) {
-      // console.log("element btn", btn.nodeName);
+async function handleFilterChange(e) {
+   // for (const btn of filterButtons) {
+   //    // console.log("element btn", btn.nodeName);
+   //    if (btn.nodeName === 'button') {
+   //       btn.classList.remove('active')
+   //    }
+   // }
+   // e.target.classList.add('active');
 
-      if (btn.nodeName === 'BUTTON') {
-         btn.classList.remove('active')
-      }
-   }
-   e.target.classList.add('active');
-
-   //This code snippet isn't totally stem from me, credit to stackoverflow.
-   // this variable store witch filter is currently active, with the  element dataset that give access to all the data attribute of an HTML element and filter correspond to data-filter attribute in the HTML.
+   
+   // // this variable store witch filter is currently active, with the  element dataset that give access to all the data attribute of an HTML element and filter correspond to data-filter attribute in the HTML.
    const filter = e.target.dataset.filter;
    currentFilter = filter;
-   const filteredMeals = filter === 'all' ? meals :
-      meals.filter(meal => meal.category === filter || meal.tags.includes(filter));
+  
 
-   runMeals();
+   // runMeals();
+
+   const filterButtons = filterMeal.querySelectorAll('button');
+   filterButtons.forEach(btn => btn.classList.remove('active'));
+
+   e.target.classList.add('active');
+   currentFilter = e.target.dataset.filter;
+
+   const filteredMeals = currentFilter === 'all'
+     
+         const dataC = await fetchDataCategories();
+         const searchLetter = inputSearch.value;
+         const dataSearch = await fetchDataSearch (searchLetter);
+
+         dataC.forEach((elementC) => {
+         dataSearch.forEach((elementS) => {
+
+         if(elementC.strCategory == elementS.strCategory){
+             filteredMeals = currentFilter ;
+         }
+         });
+         });
+   mealGrid.innerHTML = '';
+   filteredMeals.forEach(meal => {
+      const mealCard = createCard(meal);
+      mealGrid.appendChild(mealCard);
+   });
 }
 render();
