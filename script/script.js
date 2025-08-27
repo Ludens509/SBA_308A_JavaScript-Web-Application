@@ -88,7 +88,15 @@ function createCard(meal) {
    const templateCard = document.createElement('div');
    templateCard.classList.add('meal-card');
 
+   let description = 'No description available';
 
+   if (meal.strInstructions) {
+      if (meal.strInstructions.length > 150) {
+         description = meal.strInstructions.substring(0, 150) + '...';
+      } else {
+         description = meal.strInstructions;
+      }
+   }
    templateCard.innerHTML = `
         
         <div class="meal-image">
@@ -96,7 +104,7 @@ function createCard(meal) {
          </div>
         <div class="meal-content">
           <h3 class="meal-title">${meal.strMeal}</h3>
-          <p class="meal-description">${meal.strInstructions}</p> 
+          <p class="meal-description">${description}</p> 
           <p class="meal-category"><strong>Category:</strong> ${meal.strCategory || 'Unknown'}</p>  
        
         </div>
@@ -124,9 +132,9 @@ function createCard(meal) {
 
 async function handleFilterChange(e) {
 
-  const filterButtons = filterMeal.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => btn.classList.remove('active'));
-    e.target.classList.add('active');
+   const filterButtons = filterMeal.querySelectorAll('.filter-btn');
+   filterButtons.forEach(btn => btn.classList.remove('active'));
+   e.target.classList.add('active');
 
    // // this variable store witch filter is currently active, with the  element dataset that give access to all the data attribute of an HTML element and filter correspond to data-filter attribute in the HTML.
    const filter = e.target.dataset.filter;
@@ -145,17 +153,17 @@ async function handleFilterChange(e) {
 
       displayMeals(filteredMeals);
    }
-  
+
 }
 
 function updateActiveFilterButton() {
-    const filterButtons = filterMeal.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.filter === currentFilter) {
-            btn.classList.add('active');
-        }
-    });
+   const filterButtons = filterMeal.querySelectorAll('.filter-btn');
+   filterButtons.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.filter === currentFilter) {
+         btn.classList.add('active');
+      }
+   });
 }
 
 render();
