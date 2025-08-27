@@ -6,6 +6,7 @@ const filterMeal = document.querySelector('.filters');
 
 const mealGrid = document.getElementById('mealsGrid');
 
+let currentFilter = 'all';
 let currentSearchResults = [];
 
 function render() {
@@ -18,12 +19,12 @@ function addEvenListener() {
    mealForm.addEventListener('submit', handleSearch);
 
    // select all buttons inside .filters
-   // filterMeal.addEventListener('click', handleFilterChange);
-   const filterButtons = filterMeal.querySelectorAll('button');
+   filterMeal.addEventListener('click', handleFilterChange);
+   // const filterButtons = filterMeal.querySelectorAll('button');
 
-   filterButtons.forEach(btn => {
-      btn.addEventListener('click', handleFilterChange);
-   });
+   // filterButtons.forEach(btn => {
+   //    btn.addEventListener('click', handleFilterChange);
+   // });
 }
 
 async function handleSearch(e) {
@@ -37,6 +38,8 @@ async function handleSearch(e) {
    }
    // mealForm.reset();
    currentFilter = "all";
+   updateActiveFilterButton();
+
    await runMeals(searchLetter.toLowerCase());
 
    inputSearch.focus();
@@ -56,6 +59,7 @@ async function runMeals(letter = 'a') {
       }
 
       displayMeals(currentSearchResults);
+
    } catch (error) {
       console.error(`Error :`, error);
    }
@@ -86,7 +90,7 @@ function createCard(meal) {
 
 
    templateCard.innerHTML = `
-        <template>
+        
         <div class="meal-image">
             <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
          </div>
@@ -96,7 +100,6 @@ function createCard(meal) {
           <p class="meal-category"><strong>Category:</strong> ${meal.strCategory || 'Unknown'}</p>  
        
         </div>
-      </template>
     `;
    return templateCard;
 }
@@ -121,14 +124,9 @@ function createCard(meal) {
 
 async function handleFilterChange(e) {
 
-   for (const btn of filterButtons) {
-      // console.log("element btn", btn.nodeName);
-      if (btn.nodeName === 'button') {
-         btn.classList.remove('active')
-      }
-   }
-   e.target.classList.add('active');
-
+  const filterButtons = filterMeal.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
 
    // // this variable store witch filter is currently active, with the  element dataset that give access to all the data attribute of an HTML element and filter correspond to data-filter attribute in the HTML.
    const filter = e.target.dataset.filter;
