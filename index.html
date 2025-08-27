@@ -10,7 +10,6 @@
       defer
       src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
     ></script>
-    
   </head>
   <body class="flex justify-center text-center p-4">
     <section class="container mx-auto m-auto">
@@ -26,22 +25,25 @@
           <input
             type="text"
             class="search-input flex-1 border-none outline-none bg-transparent"
-            placeholder="Search for meals..."
+            placeholder="Search for meals by Letter(a-z)..."
             required
+            pattern="[A-Za-z]"
+            maxlength="1"
           />
-          <button type="submit" class="search-btn border-none text-white text-bold">
+          <button
+            type="submit"
+            class="search-btn border-none text-white text-bold"
+          >
             Search
           </button>
         </form>
       </div>
 
-      <div class="filters ">
+      <div class="filters">
         <button class="filter-btn active" data-filter="all">All</button>
       </div>
 
-      <div class="meals-grid" id= "mealsGrid"></div>
-
-      
+      <div class="meals-grid" id="mealsGrid"></div>
     </section>
   </body>
 </html>
